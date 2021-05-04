@@ -304,6 +304,8 @@ index 0000000..f82aa61
 +	ptrs[1]=_nvframe.payload[1];
 +	ptrs[2]=_nvframe.payload[2];
 +
++ frame->format=avctx->pix_fmt;
++
 +	av_image_copy(frame->data, frame->linesize, (const uint8_t **) ptrs, linesize, avctx->pix_fmt, _nvframe.width,_nvframe.height);
 +
 +	frame->width=_nvframe.width;
