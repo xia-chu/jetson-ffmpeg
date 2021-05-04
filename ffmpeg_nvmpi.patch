@@ -7,7 +7,7 @@ index 6a7a85c..5810ab5 100755
    --disable-vdpau          disable Nvidia Video Decode and Presentation API for Unix code [autodetect]
    --disable-videotoolbox   disable VideoToolbox code [autodetect]
 +  --enable-nvmpi           enable nvmpi code
- 
+
  Toolchain options:
    --arch=ARCH              select architecture [$arch]
 @@ -1851,6 +1852,7 @@ HWACCEL_LIBRARY_LIST="
@@ -16,7 +16,7 @@ index 6a7a85c..5810ab5 100755
      opencl
 +    nvmpi
  "
- 
+
  DOCUMENT_LIST="
 @@ -3014,11 +3016,14 @@ h264_mediacodec_decoder_deps="mediacodec"
  h264_mediacodec_decoder_select="h264_mp4toannexb_bsf h264_parser"
@@ -84,8 +84,8 @@ index 6a7a85c..5810ab5 100755
                               }
  enabled vapoursynth       && require_pkg_config vapoursynth "vapoursynth-script >= 42" VSScript.h vsscript_init
 +enabled nvmpi		  && require_pkg_config nvmpi nvmpi nvmpi.h nvmpi_create_decoder
- 
- 
+
+
  if enabled gcrypt; then
 diff --git a/libavcodec/Makefile b/libavcodec/Makefile
 index 3cd73fb..c3ed5cc 100644
@@ -181,7 +181,7 @@ index d2f9a39..04dc62b 100644
 +extern AVCodec ff_vp9_nvmpi_decoder;
  extern AVCodec ff_vp9_mediacodec_decoder;
  extern AVCodec ff_vp9_vaapi_encoder;
- 
+
 diff --git a/libavcodec/nvmpi_dec.c b/libavcodec/nvmpi_dec.c
 new file mode 100644
 index 0000000..f82aa61
@@ -248,7 +248,7 @@ index 0000000..f82aa61
 +		return AVERROR_INVALIDDATA;
 +	}
 +
-+	nvmpi_context->ctx=nvmpi_create_decoder(codectype,NV_PIX_YUV420);
++	nvmpi_context->ctx=nvmpi_create_decoder(codectype,avctx->pix_fmt == AV_PIX_FMT_NV12 ? NV_PIX_NV12 : NV_PIX_YUV420);
 +
 +	if(!nvmpi_context->ctx){
 +		av_log(avctx, AV_LOG_ERROR, "Failed to nvmpi_create_decoder (code = %d).\n", AVERROR_EXTERNAL);
@@ -304,9 +304,7 @@ index 0000000..f82aa61
 +	ptrs[1]=_nvframe.payload[1];
 +	ptrs[2]=_nvframe.payload[2];
 +
-+  frame->format=avctx->pix_fmt;
-+
-+	av_image_copy(frame->data, frame->linesize, (const uint8_t **) ptrs, linesize, frame->format, _nvframe.width,_nvframe.height);
++	av_image_copy(frame->data, frame->linesize, (const uint8_t **) ptrs, linesize, avctx->pix_fmt, _nvframe.width,_nvframe.height);
 +
 +	frame->width=_nvframe.width;
 +	frame->height=_nvframe.height;
