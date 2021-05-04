@@ -359,7 +359,6 @@ index 0000000..f82aa61
 +NVMPI_DEC(vp8, AV_CODEC_ID_VP8,NULL);
 +
 diff --git a/libavcodec/nvmpi_enc.c b/libavcodec/nvmpi_enc.c
-new file mode 100644
 index 0000000..0e1390e
 --- /dev/null
 +++ b/libavcodec/nvmpi_enc.c
