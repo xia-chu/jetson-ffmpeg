@@ -3,7 +3,7 @@ L4T Multimedia API for ffmpeg
 
 **1.build and install library**
 
-    git clone https://github.com/jocover/jetson-ffmpeg.git
+    git clone https://github.com/HunterAP23/jetson-ffmpeg.git
     cd jetson-ffmpeg
     mkdir build
     cd build
@@ -11,12 +11,12 @@ L4T Multimedia API for ffmpeg
     make
     sudo make install
     sudo ldconfig
-	
+
 **2.patch ffmpeg and build**
 
     git clone git://source.ffmpeg.org/ffmpeg.git -b release/4.2 --depth=1
     cd ffmpeg
-    wget https://github.com/jocover/jetson-ffmpeg/raw/master/ffmpeg_nvmpi.patch
+    wget https://github.com/HunterAP23/jetson-ffmpeg/raw/master/ffmpeg_nvmpi.patch
     git apply ffmpeg_nvmpi.patch
     ./configure --enable-nvmpi
     make
@@ -29,15 +29,15 @@ L4T Multimedia API for ffmpeg
   - HEVC
   - VP8
   - VP9
-  
+
 **example**
 
     ffmpeg -c:v h264_nvmpi -i input_file -f null -
-	
+
 ### Supports Encoding
   - H.264/AVC
   - HEVC
-  
+
 **example**
 
     ffmpeg -i input_file -c:v h264_nvmpi <output.mp4>
